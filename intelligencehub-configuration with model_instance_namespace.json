@@ -1,0 +1,151 @@
+{
+  "productInfo" : {
+    "company" : "HighByte",
+    "product" : "IntelligenceHub",
+    "version" : "4.4.0",
+    "build" : "2026.2.13.241",
+    "stage" : "Alpha"
+  },
+  "project" : {
+    "version" : 13,
+    "connections" : [ ],
+    "inputs" : [ ],
+    "outputs" : [ ],
+    "modeling" : {
+      "models" : [ {
+        "name" : "plcIDCard",
+        "tags" : [ ],
+        "attributes" : [ {
+          "attributeType" : "Internal",
+          "name" : "name",
+          "nullable" : false,
+          "required" : false,
+          "array" : false,
+          "internalType" : "String"
+        }, {
+          "attributeType" : "Internal",
+          "name" : "ID",
+          "nullable" : false,
+          "required" : false,
+          "array" : false,
+          "internalType" : "Any"
+        }, {
+          "attributeType" : "Internal",
+          "name" : "currentTemp",
+          "nullable" : false,
+          "required" : false,
+          "array" : false,
+          "internalType" : "Any"
+        }, {
+          "attributeType" : "Internal",
+          "name" : "setValueTemp",
+          "nullable" : false,
+          "required" : false,
+          "array" : false,
+          "internalType" : "String"
+        }, {
+          "attributeType" : "Internal",
+          "name" : "maxValueTemp",
+          "nullable" : false,
+          "required" : false,
+          "array" : false,
+          "internalType" : "Any"
+        } ]
+      } ],
+      "instances" : [ {
+        "name" : "COT1",
+        "tags" : [ ],
+        "model" : "plcIDCard",
+        "rootValueAs" : "Object",
+        "template" : {
+          "type" : "Off"
+        },
+        "executeMode" : "V4",
+        "initExpression" : "",
+        "attributes" : [ {
+          "name" : "name",
+          "expression" : {
+            "type" : "Reference",
+            "reference" : {
+              "type" : "Empty"
+            }
+          }
+        }, {
+          "name" : "ID",
+          "expression" : {
+            "type" : "Reference",
+            "reference" : {
+              "type" : "Empty"
+            }
+          },
+          "defaultValue" : 1
+        }, {
+          "name" : "currentTemp",
+          "expression" : {
+            "type" : "JavaScript",
+            "expression" : "return Math.floor(Math.random() * 10 + 60);"
+          }
+        }, {
+          "name" : "setValueTemp",
+          "expression" : {
+            "type" : "Reference",
+            "reference" : {
+              "type" : "Empty"
+            }
+          },
+          "defaultValue" : 65
+        }, {
+          "name" : "maxValueTemp",
+          "expression" : {
+            "type" : "Reference",
+            "reference" : {
+              "type" : "Empty"
+            }
+          },
+          "defaultValue" : 75
+        } ],
+        "parameters" : {
+          "type" : "EmptyParameters"
+        }
+      } ]
+    },
+    "conditions" : [ ],
+    "functions" : [ ],
+    "tags" : [ ],
+    "pipelines" : [ ],
+    "namespace" : [ {
+      "type" : "local",
+      "id" : "c22ecaa8-f167-4cc3-b68b-d1a0094fe552",
+      "name" : "Laatzen",
+      "reference" : {
+        "type" : "Empty"
+      }
+    }, {
+      "type" : "local",
+      "id" : "36fd8010-8b98-47b1-98db-85fc53c71f07",
+      "name" : "Office",
+      "parentNamespaceId" : "c22ecaa8-f167-4cc3-b68b-d1a0094fe552",
+      "reference" : {
+        "type" : "Instance",
+        "name" : "COT1",
+        "path" : "",
+        "params" : { }
+      }
+    }, {
+      "type" : "local",
+      "id" : "8b0b26ce-a12a-4b2a-96f0-5a59611128d7",
+      "name" : "COT1",
+      "parentNamespaceId" : "36fd8010-8b98-47b1-98db-85fc53c71f07",
+      "reference" : {
+        "type" : "Instance",
+        "name" : "COT1_plcID",
+        "path" : "",
+        "params" : { }
+      }
+    } ]
+  },
+  "network" : {
+    "groups" : [ ],
+    "hubs" : [ ]
+  }
+}

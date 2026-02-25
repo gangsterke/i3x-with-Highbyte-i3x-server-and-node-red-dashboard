@@ -1,0 +1,784 @@
+[
+    {
+        "id": "86668680b8786960",
+        "type": "tab",
+        "label": "i3x",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b2c3d4e5f6a7b8c9",
+        "type": "function",
+        "z": "86668680b8786960",
+        "name": "Set Bearer Token",
+        "func": "msg.headers = {\n    'Authorization': 'Bearer key_3ix./cfouRxbwRhkgB6Q5h3iTYGVbvCjY9cKA15BlsV79kQ=',\n    'Content-Type': 'application/json',\n    'Accept': 'application/json'\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 60,
+        "wires": [
+            [
+                "c3d4e5f6a7b8c9d0"
+            ]
+        ]
+    },
+    {
+        "id": "c3d4e5f6a7b8c9d0",
+        "type": "http request",
+        "z": "86668680b8786960",
+        "name": "GET namespaces",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:8885/i3x/namespaces",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 590,
+        "y": 60,
+        "wires": [
+            [
+                "0a9b817e284412dd"
+            ]
+        ]
+    },
+    {
+        "id": "0a9b817e284412dd",
+        "type": "debug",
+        "z": "86668680b8786960",
+        "name": "debug 11",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "94ebd77850ee4d9f",
+        "type": "comment",
+        "z": "86668680b8786960",
+        "name": "[{\"uri\":\"http://highbyte.com/default\",\"displayName\":\"HighByte\"}]",
+        "info": "",
+        "x": 940,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "48d8210edcdfc770",
+        "type": "http request",
+        "z": "86668680b8786960",
+        "name": "GET objecttypes",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:8885/i3x/objecttypes",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 580,
+        "y": 140,
+        "wires": [
+            [
+                "898a614f487cb331"
+            ]
+        ]
+    },
+    {
+        "id": "898a614f487cb331",
+        "type": "debug",
+        "z": "86668680b8786960",
+        "name": "debug 12",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "10e643838c172c8a",
+        "type": "http request",
+        "z": "86668680b8786960",
+        "name": "GET objects",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:8885/i3x/objects",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 570,
+        "y": 300,
+        "wires": [
+            [
+                "ba8c7d968925312d"
+            ]
+        ]
+    },
+    {
+        "id": "ba8c7d968925312d",
+        "type": "debug",
+        "z": "86668680b8786960",
+        "name": "debug 14",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "9f1d6b6baee4da4e",
+        "type": "comment",
+        "z": "86668680b8786960",
+        "name": "",
+        "info": "[{\"elementId\":\"HighByte\",\"displayName\":\"HighByte\",\"typeId\":\"\",\"parentId\":\"/\",\"isComposition\":false,\"namespaceUri\":\"http://highbyte.com/default\"},{\"elementId\":\"HighByte.Instance\",\"displayName\":\"Instance\",\"typeId\":\"\",\"parentId\":\"HighByte\",\"isComposition\":false,\"namespaceUri\":\"http://highbyte.com/default\"},{\"elementId\":\"HighByte.Instance.COT1\",\"displayName\":\"COT1\",\"typeId\":\"\",\"parentId\":\"HighByte.Instance\",\"isComposition\":false,\"namespaceUri\":\"http://highbyte.com/default\"},{\"elementId\":\"HighByte.Connection\",\"displayName\":\"Connection\",\"typeId\":\"\",\"parentId\":\"HighByte\",\"isComposition\":false,\"namespaceUri\":\"http://highbyte.com/default\"},{\"elementId\":\"HighByte.Connection.Input\",\"displayName\":\"Input\",\"typeId\":\"\",\"parentId\":\"HighByte.Connection\",\"isComposition\":false,\"namespaceUri\":\"http://highbyte.com/default\"},{\"elementId\":\"HighByte.Connection.Input.CCDeventDB\",\"displayName\":\"CCDeventDB\",\"typeId\":\"\",\"parentId\":\"HighByte.Connection.Input\",\"isComposition\":false,\"namespaceUri\":\"http://highbyte.c...\n",
+        "x": 780,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "d957ce1183338018",
+        "type": "http request",
+        "z": "86668680b8786960",
+        "name": "GET relationshiptypes",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://127.0.0.1:8885/i3x/relationshiptypes",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 600,
+        "y": 220,
+        "wires": [
+            [
+                "4a502102148c735c"
+            ]
+        ]
+    },
+    {
+        "id": "4a502102148c735c",
+        "type": "debug",
+        "z": "86668680b8786960",
+        "name": "debug 13",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "79297dce41381e27",
+        "type": "comment",
+        "z": "86668680b8786960",
+        "name": "[{\"elementId\":\"children\",\"displayName\":\"children\",\"namespaceUri\":\"http://highbyte.com/default\"}]",
+        "info": "[{\"elementId\":\"children\",\n\"displayName\":\"children\",\n\"namespaceUri\":\"http://highbyte.com/default\"}]\n",
+        "x": 1050,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "9e58971436c436cc",
+        "type": "http request",
+        "z": "86668680b8786960",
+        "name": "POST object values",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 590,
+        "y": 380,
+        "wires": [
+            [
+                "55be829986ed38b9",
+                "30de6dcee2156c49"
+            ]
+        ]
+    },
+    {
+        "id": "55be829986ed38b9",
+        "type": "debug",
+        "z": "86668680b8786960",
+        "name": "debug 15",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "2d5d3be8dc461561",
+        "type": "comment",
+        "z": "86668680b8786960",
+        "name": "{\"HighByte.Instance.COT1\":{\"data\":[{\"value\":{\"ID\":1,\"currentTemp\":60,\"setValueTemp\":\"65\",\"maxValueTemp\":75},\"quality\":\"GOOD\",\"timestamp\":\"2026-02-25T20:33:33Z\"}]}}",
+        "info": "{\"HighByte.Instance.COT1\":{\"data\":[{\"value\":{\"ID\":1,\"currentTemp\":60,\"setValueTemp\":\"65\",\"maxValueTemp\":75},\"quality\":\"GOOD\",\"timestamp\":\"2026-02-25T20:33:33Z\"}]}}\n",
+        "x": 1270,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "69e51bfc99c8cc52",
+        "type": "inject",
+        "z": "86668680b8786960",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 380,
+        "wires": [
+            [
+                "4525c0d64bc755ac"
+            ]
+        ]
+    },
+    {
+        "id": "4525c0d64bc755ac",
+        "type": "function",
+        "z": "86668680b8786960",
+        "name": "login request",
+        "func": "msg.headers = msg.headers || {}\nmsg.url = \"http://127.0.0.1:8885/i3x/objects/value\"\nmsg.method = \"POST\"\nmsg.headers = {\n    'Authorization': 'Bearer key_3ix./cfouRxbwRhkgB6Q5h3iTYGVbvCjY9cKA15BlsV79kQ=',\n    'Content-Type': 'application/json'\n}\nmsg.payload = {\n     \"elementIds\": [\"HighByte.Instance.COT1\"],\n     \"maxDepth\": 1\n}\nreturn msg",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 380,
+        "wires": [
+            [
+                "9e58971436c436cc"
+            ]
+        ]
+    },
+    {
+        "id": "extract_instance",
+        "type": "function",
+        "z": "86668680b8786960",
+        "name": "Extract Instance Data",
+        "func": "// Extract the nested object from the HighByte instance\nconst instanceKey = \"HighByte.Instance.COT1\";\nconst instanceData = msg.payload[instanceKey];\n\nif (instanceData && instanceData.data && instanceData.data.length > 0) {\n  msg.payload = instanceData.data[0];\n} else {\n  msg.payload = { error: \"No data found\" };\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1140,
+        "y": 460,
+        "wires": [
+            [
+                "b9b214b72a903b28"
+            ]
+        ]
+    },
+    {
+        "id": "debug_output",
+        "type": "debug",
+        "z": "86668680b8786960",
+        "name": "Parsed Output",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1640,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "4d957f0eb25bb0ee",
+        "type": "inject",
+        "z": "86668680b8786960",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 60,
+        "wires": [
+            [
+                "b2c3d4e5f6a7b8c9"
+            ]
+        ]
+    },
+    {
+        "id": "0d4dda1747807a14",
+        "type": "function",
+        "z": "86668680b8786960",
+        "name": "Set Bearer Token",
+        "func": "msg.headers = {\n    'Authorization': 'Bearer key_3ix./cfouRxbwRhkgB6Q5h3iTYGVbvCjY9cKA15BlsV79kQ=',\n    'Content-Type': 'application/json',\n    'Accept': 'application/json'\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 140,
+        "wires": [
+            [
+                "48d8210edcdfc770"
+            ]
+        ]
+    },
+    {
+        "id": "82b10701db72ddb2",
+        "type": "inject",
+        "z": "86668680b8786960",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 140,
+        "wires": [
+            [
+                "0d4dda1747807a14"
+            ]
+        ]
+    },
+    {
+        "id": "72e775ce7f5999fc",
+        "type": "function",
+        "z": "86668680b8786960",
+        "name": "Set Bearer Token",
+        "func": "msg.headers = {\n    'Authorization': 'Bearer key_3ix./cfouRxbwRhkgB6Q5h3iTYGVbvCjY9cKA15BlsV79kQ=',\n    'Content-Type': 'application/json',\n    'Accept': 'application/json'\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 220,
+        "wires": [
+            [
+                "d957ce1183338018"
+            ]
+        ]
+    },
+    {
+        "id": "d6f187d66a37ea82",
+        "type": "inject",
+        "z": "86668680b8786960",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 220,
+        "wires": [
+            [
+                "72e775ce7f5999fc"
+            ]
+        ]
+    },
+    {
+        "id": "95a406746be858b5",
+        "type": "function",
+        "z": "86668680b8786960",
+        "name": "Set Bearer Token",
+        "func": "msg.headers = {\n    'Authorization': 'Bearer key_3ix./cfouRxbwRhkgB6Q5h3iTYGVbvCjY9cKA15BlsV79kQ=',\n    'Content-Type': 'application/json',\n    'Accept': 'application/json'\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 300,
+        "wires": [
+            [
+                "10e643838c172c8a"
+            ]
+        ]
+    },
+    {
+        "id": "7ca6fd291662285f",
+        "type": "inject",
+        "z": "86668680b8786960",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 300,
+        "wires": [
+            [
+                "95a406746be858b5"
+            ]
+        ]
+    },
+    {
+        "id": "30de6dcee2156c49",
+        "type": "json",
+        "z": "86668680b8786960",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 710,
+        "y": 480,
+        "wires": [
+            [
+                "check_http_status"
+            ]
+        ]
+    },
+    {
+        "id": "error_handler",
+        "type": "function",
+        "z": "86668680b8786960",
+        "name": "Error Handler",
+        "func": "msg.payload = {\n  error: \"HTTP Error\",\n  statusCode: msg.statusCode,\n  message: msg.payload\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1120,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "check_http_status",
+        "type": "switch",
+        "z": "86668680b8786960",
+        "name": "Check HTTP Status",
+        "property": "statusCode",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "200",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 890,
+        "y": 480,
+        "wires": [
+            [
+                "extract_instance"
+            ],
+            [
+                "error_handler"
+            ]
+        ]
+    },
+    {
+        "id": "8bd8d90961709a28",
+        "type": "ui-gauge",
+        "z": "86668680b8786960",
+        "name": "",
+        "group": "dash_group",
+        "order": 1,
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "",
+        "units": "units",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c"
+            },
+            {
+                "from": "4",
+                "color": "#ffc800"
+            },
+            {
+                "from": "7",
+                "color": "#ea5353"
+            }
+        ],
+        "min": 0,
+        "max": "100",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 1530,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "dc071da62c8174a0",
+        "type": "ui-chart",
+        "z": "86668680b8786960",
+        "group": "dash_group",
+        "name": "",
+        "label": "chart",
+        "order": 2,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "property",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "yAxisLabel": "",
+        "yAxisProperty": "",
+        "ymin": "1",
+        "ymax": "100",
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "x": 1510,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b9b214b72a903b28",
+        "type": "function",
+        "z": "86668680b8786960",
+        "name": "Flatten Value Object",
+        "func": "// Flatten the nested structure\nconst item = msg.payload;\n\nif (item.value) {\n  msg.payload = item.value.currentTemp\n} else {\n  msg.payload = { error: \"Value object not found\" };\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1380,
+        "y": 460,
+        "wires": [
+            [
+                "debug_output",
+                "8bd8d90961709a28",
+                "dc071da62c8174a0"
+            ]
+        ]
+    },
+    {
+        "id": "6a533f13455f20d4",
+        "type": "comment",
+        "z": "86668680b8786960",
+        "name": "[{\"elementId\":\"plcIDCard\",\"displayName\":\"plcIDCard\",\"namespaceUri\":\"http://highbyte.com/default\",\"schema\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"maxLength\":2147483647},\"ID\":{},\"currentTemp\":{},\"setValueTemp\":{\"type\":\"string\",\"maxLength\":2147483647},\"maxValueTemp\":{}},\"required\":[],\"additionalProperties\":false}}]",
+        "info": "[{\"elementId\":\"plcIDCard\",\"displayName\":\"plcIDCard\",\"namespaceUri\":\"http://highbyte.com/default\",\"schema\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"maxLength\":2147483647},\"ID\":{},\"currentTemp\":{},\"setValueTemp\":{\"type\":\"string\",\"maxLength\":2147483647},\"maxValueTemp\":{}},\"required\":[],\"additionalProperties\":false}}]\n",
+        "x": 1770,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "dash_group",
+        "type": "ui-group",
+        "name": "ni3x Monitor",
+        "page": "dash_page",
+        "width": 12,
+        "height": 1,
+        "order": 1
+    },
+    {
+        "id": "dash_page",
+        "type": "ui-page",
+        "name": "ni3x Dashboard",
+        "ui": "c543e1a2e73adda3",
+        "path": "/ni3x",
+        "layout": "grid",
+        "theme": "dash_theme",
+        "order": 4
+    },
+    {
+        "id": "c543e1a2e73adda3",
+        "type": "ui-base",
+        "name": "UI Name",
+        "path": "/dashboard",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false
+    },
+    {
+        "id": "dash_theme",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        }
+    },
+    {
+        "id": "85eaa96581342c5d",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@flowfuse/node-red-dashboard": "1.16.0"
+        }
+    }
+]
