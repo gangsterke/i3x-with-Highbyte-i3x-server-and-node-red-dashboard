@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>i3X Tag Browser</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --surface: #13181f;
+      --surface-2: #1c2330;
+      --border: #252d3a;
+      --accent: #00d4aa;
+      --accent-dim: rgba(0, 212, 170, 0.12);
+      --accent-glow: rgba(0, 212, 170, 0.25);
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --text-dim: #94a3b8;
+      --red: #f87171;
+      --yellow: #fbbf24;
+      --blue: #60a5fa;
+      --purple: #a78bfa;
+      --orange: #fb923c;
+      --green: #4ade80;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    header { margin-bottom: 36px; }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 6px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      font-size: 13px;
+      color: #0b0e14;
+      flex-shrink: 0;
+    }
+
+    h1 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-left: 50px;
+    }
+
+    .config-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .config-panel h2 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 18px;
+    }
+
+    .fields-grid {
+      display: grid;
+      grid-template-columns: 2fr 2fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 700px) {
+      .fields-grid { grid-template-columns: 1fr; }
+    }
+
+    .field-group { display: flex; flex-direction: column; gap: 6px; }
+
+    label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    input[type="text"], input[type="number"] {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+
+    input::placeholder { color: var(--text-muted); }
+
+    .btn {
+      padding: 10px 22px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      white-space: nowrap;
+      height: 42px;
+    }
+
+    .btn-primary { background: var(--accent); color: #0b0e14; }
+    .btn-primary:hover:not(:disabled) { background: #00f0c0; box-shadow: 0 0 20px var(--accent-glow); }
+    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 7px 16px;
+      font-size: 12px;
+      height: auto;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    .request-preview {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 14px;
+    }
+
+    .request-preview-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .request-preview pre {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      min-height: 42px;
+    }
+
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .status-dot.loading { background: var(--yellow); animation: pulse 1s infinite; }
+    .status-dot.success { background: var(--green); }
+    .status-dot.error   { background: var(--red); }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .status-text {
+      color: var(--text-dim);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+    }
+
+    .summary-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .stat-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .stat-value { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; color: var(--accent); }
+
+    .filter-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filter-row input { flex: 1; min-width: 200px; max-width: 320px; }
+
+    .type-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .type-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      user-select: none;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead tr {
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    th:hover { color: var(--text); }
+    th.sorted { color: var(--accent); }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(0,212,170,0.035); }
+
+    td { padding: 11px 16px; font-size: 13px; vertical-align: middle; }
+
+    .td-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .td-path {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      max-width: 240px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .td-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .td-value.v-bool-true  { color: var(--green); }
+    .td-value.v-bool-false { color: var(--red); }
+    .td-value.v-num        { color: var(--blue); }
+    .td-value.v-str        { color: var(--yellow); }
+    .td-value.v-null       { color: var(--text-muted); font-style: italic; }
+
+    .type-pill {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .copy-btn {
+      opacity: 0;
+      padding: 2px 6px;
+      font-size: 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: opacity 0.15s;
+      margin-left: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    tr:hover .copy-btn { opacity: 1; }
+    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    .raw-panel {
+      margin-top: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .raw-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .raw-panel-header span {
+      font-size: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .raw-panel pre {
+      padding: 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .raw-panel pre.open { display: block; }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-muted);
+    }
+
+    .empty-state .icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
+    .empty-state p { font-size: 14px; line-height: 1.6; }
+
+    .new-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(0, 212, 170, 0.18);
+      color: var(--accent);
+      border: 1px solid rgba(0, 212, 170, 0.4);
+      margin-left: 8px;
+      vertical-align: middle;
+      animation: fadeInBadge 0.4s ease;
+    }
+
+    @keyframes fadeInBadge {
+      from { opacity: 0; transform: scale(0.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* Action bar */
+    .action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+
+    .action-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-settings {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      height: 42px;
+    }
+
+    .btn-settings:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-settings svg { flex-shrink: 0; }
+
+    .server-hint {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Modal overlay */
+    .modal-overlay {
+      visibility: hidden;
+      opacity: 0;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(2px);
+      z-index: 100;
+      transition: opacity 0.18s ease, visibility 0.18s ease;
+    }
+
+    .modal-overlay.open {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Modal - always in DOM so inputs are always readable */
+    .modal {
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      width: min(560px, 92vw);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      z-index: 101;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+      transition: transform 0.18s ease, opacity 0.18s ease, visibility 0.18s ease;
+    }
+
+    .modal.open {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: color 0.15s;
+      line-height: 1;
+    }
+
+    .modal-close:hover { color: var(--text); }
+
+    .modal-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="logo-row">
+      <div class="logo-icon">i3X</div>
+      <h1>Tag Browser</h1>
+    </div>
+    <p class="subtitle">POST /i3x/objects/value — CESMII Contextualized Manufacturing Information API</p>
+  </header>
+
+  <!-- Top action bar -->
+  <div class="action-bar">
+    <button class="btn btn-settings" onclick="openSettings()" title="Settings">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      Settings
+    </button>
+    <input type="text" id="elementId" placeholder="HighByte.Instance.COT1" value="HighByte.Instance.COT1" style="flex:1;max-width:420px" />
+    <button class="btn btn-primary" id="fetchBtn" onclick="fetchTags()">Fetch</button>
+  </div>
+
+  <!-- Settings modal overlay -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeSettings()"></div>
+
+  <!-- Settings modal -->
+  <div class="modal" id="settingsModal">
+    <div class="modal-header">
+      <span class="modal-title">Settings</span>
+      <button class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label>Server Base URL</label>
+        <input type="text" id="serverUrl" placeholder="http://127.0.0.1:8885" value="http://127.0.0.1:8885" />
+      </div>
+      <div class="field-group">
+        <label>Max Depth</label>
+        <input type="number" id="maxDepth" value="1" min="0" max="10" style="max-width:120px" />
+      </div>
+      <div class="field-group">
+        <label>Bearer Token</label>
+        <input type="text" id="authToken"
+          placeholder="key_3ix./..."
+          value="key_3ix./cfouRxbwRhkgB6Q5h3iTYGVbvCjY9cKA15BlsV79kQ=" />
+      </div>
+      <div class="request-preview">
+        <div class="request-preview-label">Request Preview</div>
+        <pre id="requestPreview"></pre>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-primary" onclick="closeSettings();fetchTags()">Save &amp; Fetch</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-dot" id="statusDot"></div>
+    <span class="status-text" id="statusText">Ready — fill in the fields above and click Fetch.</span>
+  </div>
+
+  <div class="summary-row" id="summaryRow" style="display:none">
+    <div class="stat-chip">
+      <span class="stat-label">Tags</span>
+      <span class="stat-value" id="totalCount">0</span>
+    </div>
+    <div class="stat-chip">
+      <span class="stat-label">Element</span>
+      <span class="stat-value" id="elementName" style="font-size:13px;color:var(--text-dim)">—</span>
+    </div>
+    <div style="flex:1"></div>
+    <button class="btn btn-ghost" onclick="exportCSV()">Export CSV</button>
+  </div>
+
+  <div class="filter-row" id="filterRow" style="display:none">
+    <input type="text" id="searchInput" placeholder="Search by name, path, type, value…" oninput="renderTable()" />
+    <div class="type-filters" id="typeFilters"></div>
+  </div>
+
+  <div class="table-wrap" id="tableWrap" style="display:none">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy('name',this)">Name <span id="s-name">↕</span></th>
+          <th onclick="sortBy('dataType',this)">Type <span id="s-dataType">↕</span></th>
+          <th onclick="sortBy('value',this)">Value <span id="s-value">↕</span></th>
+          <th onclick="sortBy('unit',this)">Unit <span id="s-unit">↕</span></th>
+          <th onclick="sortBy('path',this)">Path <span id="s-path">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" id="emptyState" style="display:none">
+    <div class="icon">🔍</div>
+    <p>No tags match your search.</p>
+  </div>
+
+  <div class="raw-panel" id="rawPanel" style="display:none">
+    <div class="raw-panel-header" onclick="toggleRaw()">
+      <span>Raw Response</span>
+      <span id="rawToggleIcon" style="color:var(--accent)">▶ show</span>
+    </div>
+    <pre id="rawContent"></pre>
+  </div>
+
+</div>
+
+<script>
+  let allTags = [];
+  let knownPaths = new Set(); // tracks paths seen in previous fetches
+  let newPaths = new Set();  // paths that appeared in the latest fetch
+  let sortCol = 'name';
+  let sortDir = 1;
+  let activeTypes = new Set();
+
+  const typeColors = {
+    'Boolean':  { bg: 'rgba(74,222,128,0.15)',  color: '#4ade80' },
+    'Int16':    { bg: 'rgba(96,165,250,0.15)',  color: '#60a5fa' },
+    'Int32':    { bg: 'rgba(96,165,250,0.15)',  color: '#60a5fa' },
+    'Int64':    { bg: 'rgba(96,165,250,0.15)',  color: '#60a5fa' },
+    'UInt16':   { bg: 'rgba(96,165,250,0.15)',  color: '#60a5fa' },
+    'UInt32':   { bg: 'rgba(96,165,250,0.15)',  color: '#60a5fa' },
+    'Float':    { bg: 'rgba(96,165,250,0.15)',  color: '#60a5fa' },
+    'Double':   { bg: 'rgba(96,165,250,0.15)',  color: '#60a5fa' },
+    'String':   { bg: 'rgba(251,191,36,0.15)',  color: '#fbbf24' },
+    'DateTime': { bg: 'rgba(167,139,250,0.15)', color: '#a78bfa' },
+    'Object':   { bg: 'rgba(251,146,60,0.15)',  color: '#fb923c' },
+    'default':  { bg: 'rgba(100,116,139,0.15)', color: '#94a3b8' },
+  };
+
+  function typeStyle(t) { return typeColors[t] || typeColors['default']; }
+
+
+  function openSettings() {
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('settingsModal').classList.add('open');
+    updatePreview();
+  }
+
+  function closeSettings() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.getElementById('settingsModal').classList.remove('open');
+    const url = document.getElementById('serverUrl').value.trim();
+    const el  = document.getElementById('elementId').value.trim();
+
+  }
+
+  // ── Live request preview ──────────────────────────────────────────────────
+  function updatePreview() {
+    const base  = (document.getElementById('serverUrl').value || '').trim().replace(/\/$/, '');
+    const elId  = (document.getElementById('elementId').value || '').trim();
+    const depth = parseInt(document.getElementById('maxDepth').value) || 1;
+    const token = (document.getElementById('authToken').value || '').trim();
+    const body  = { elementIds: [elId], maxDepth: depth };
+
+    document.getElementById('requestPreview').innerHTML =
+      `<span style="color:var(--orange);font-weight:600">POST</span> ${esc(base)}/i3x/objects/value\n` +
+      `<span style="color:var(--text-muted)">Authorization:</span> Bearer ${esc(token.slice(0, 24))}…\n` +
+      `<span style="color:var(--text-muted)">Content-Type:</span> application/json\n\n` +
+      esc(JSON.stringify(body, null, 2));
+  }
+
+  ['serverUrl','elementId','maxDepth','authToken'].forEach(id =>
+    document.getElementById(id).addEventListener('input', updatePreview)
+  );
+
+  document.addEventListener('DOMContentLoaded', () => {
+    updatePreview();
+    ['serverUrl','elementId','maxDepth','authToken'].forEach(id =>
+      document.getElementById(id).addEventListener('keydown', e => {
+        if (e.key === 'Enter') { closeSettings(); fetchTags(); }
+      })
+    );
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeSettings();
+    });
+    // Init server hint
+    const url = document.getElementById('serverUrl').value.trim();
+    const el  = document.getElementById('elementId').value.trim();
+
+  });
+
+  // ── Fetch ─────────────────────────────────────────────────────────────────
+  async function fetchTags() {
+    const base  = document.getElementById('serverUrl').value.trim().replace(/\/$/, '');
+    const elId  = document.getElementById('elementId').value.trim();
+    const depth = parseInt(document.getElementById('maxDepth').value) || 1;
+    const token = document.getElementById('authToken').value.trim();
+
+    if (!base) { setStatus('error', 'Please enter a server URL.'); return; }
+    if (!elId) { setStatus('error', 'Please enter an Element ID.'); return; }
+
+    setStatus('loading', `POST ${base}/i3x/objects/value  …`);
+    document.getElementById('fetchBtn').disabled = true;
+
+    try {
+      const resp = await fetch(`${base}/i3x/objects/value`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ elementIds: [elId], maxDepth: depth }),
+      });
+
+      const raw = await resp.text();
+      document.getElementById('rawPanel').style.display = 'block';
+      document.getElementById('rawContent').textContent = raw;
+
+      if (!resp.ok) {
+        setStatus('error', `Server returned ${resp.status} ${resp.statusText} — see Raw Response below.`);
+        document.getElementById('fetchBtn').disabled = false;
+        return;
+      }
+
+      let data;
+      try { data = JSON.parse(raw); }
+      catch { setStatus('error', 'Response is not valid JSON — see Raw Response below.'); document.getElementById('fetchBtn').disabled = false; return; }
+
+      // Always show raw response open so user can inspect what was received
+      document.getElementById('rawContent').classList.add('open');
+      document.getElementById('rawToggleIcon').textContent = '\u25bc hide';
+
+      const freshTags = flatten(data);
+      // Determine which paths are new compared to the previous fetch
+      newPaths = new Set(freshTags.map(t => t.path).filter(p => !knownPaths.has(p)));
+      // Update known paths
+      freshTags.forEach(t => knownPaths.add(t.path));
+      allTags = freshTags;
+
+      if (allTags.length === 0) {
+        setStatus('error', 'Got a response but could not extract any tags. Check Raw Response below.');
+        document.getElementById('fetchBtn').disabled = false;
+        return;
+      }
+
+      document.getElementById('elementName').textContent = elId;
+      buildTypeFilters();
+      document.getElementById('summaryRow').style.display = 'flex';
+      document.getElementById('filterRow').style.display  = 'flex';
+      renderTable();
+      setStatus('success', `Loaded ${allTags.length} tag${allTags.length !== 1 ? 's' : ''} from ${elId}`);
+
+    } catch (err) {
+      setStatus('error', `Fetch error: ${err.message}  (check URL and CORS)`);
+    }
+
+    document.getElementById('fetchBtn').disabled = false;
+  }
+
+  // ── Response normaliser ───────────────────────────────────────────────────
+  // Handles the actual i3X response shape:
+  // {
+  //   "ElementId": {
+  //     "data": [{ "value": { "tag1": 66, "tag2": "65", ... }, "quality": "GOOD", "timestamp": "..." }]
+  //   }
+  // }
+  function flatten(data) {
+    const tags = [];
+
+    // Top-level keys are element IDs
+    for (const [elementId, elementObj] of Object.entries(data)) {
+      const dataArr = elementObj.data || elementObj.values || elementObj.results;
+      if (!Array.isArray(dataArr) || dataArr.length === 0) continue;
+
+      // Use the first (most recent) data entry
+      const entry = dataArr[0];
+      const quality   = entry.quality   || '';
+      const timestamp = entry.timestamp || '';
+      const valueObj  = entry.value;
+
+      if (!valueObj || typeof valueObj !== 'object') continue;
+
+      // Each key inside value is a tag
+      for (const [tagName, tagValue] of Object.entries(valueObj)) {
+        const rawValue = tagValue;
+        tags.push({
+          name:      tagName,
+          path:      `${elementId}.${tagName}`,
+          dataType:  inferType(tagValue),
+          value:     formatValue(tagValue),
+          rawValue,
+          unit:      '',
+          quality,
+          timestamp,
+        });
+      }
+    }
+
+    return tags;
+  }
+
+  function inferType(v) {
+    if (v === null || v === undefined) return 'Unknown';
+    if (typeof v === 'boolean') return 'Boolean';
+    if (typeof v === 'string')  return 'String';
+    if (typeof v === 'number')  return Number.isInteger(v) ? 'Int32' : 'Double';
+    if (typeof v === 'object')  return 'Object';
+    return 'Unknown';
+  }
+
+  function formatValue(v) {
+    if (v === null || v === undefined) return 'null';
+    if (typeof v === 'object') return JSON.stringify(v);
+    return String(v);
+  }
+
+  // ── Type filter pills ─────────────────────────────────────────────────────
+  function buildTypeFilters() {
+    const types = [...new Set(allTags.map(t => t.dataType))].sort();
+    activeTypes = new Set(types);
+    const el = document.getElementById('typeFilters');
+    el.innerHTML = '';
+    types.forEach(tp => {
+      const s = typeStyle(tp);
+      const btn = document.createElement('span');
+      btn.className = 'type-badge';
+      btn.textContent = tp;
+      btn.style.background = s.bg;
+      btn.style.color = s.color;
+      btn.onclick = () => {
+        if (activeTypes.has(tp)) {
+          activeTypes.delete(tp);
+          btn.style.background = 'transparent';
+          btn.style.borderColor = s.color;
+        } else {
+          activeTypes.add(tp);
+          btn.style.background = s.bg;
+          btn.style.borderColor = 'transparent';
+        }
+        renderTable();
+      };
+      el.appendChild(btn);
+    });
+  }
+
+  // ── Sorting ───────────────────────────────────────────────────────────────
+  function sortBy(col, thEl) {
+    if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
+    document.querySelectorAll('th').forEach(t => t.classList.remove('sorted'));
+    thEl.classList.add('sorted');
+    document.querySelectorAll('th span[id^="s-"]').forEach(el => el.textContent = '↕');
+    const icon = document.getElementById('s-' + col);
+    if (icon) icon.textContent = sortDir === 1 ? '↑' : '↓';
+    renderTable();
+  }
+
+  // ── Render table ──────────────────────────────────────────────────────────
+  function renderTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    let rows = allTags.filter(t =>
+      activeTypes.has(t.dataType) &&
+      (!q || t.name.toLowerCase().includes(q) ||
+             t.path.toLowerCase().includes(q) ||
+             t.dataType.toLowerCase().includes(q) ||
+             t.value.toLowerCase().includes(q))
+    );
+
+    rows.sort((a, b) => {
+      const av = String(a[sortCol] || '').toLowerCase();
+      const bv = String(b[sortCol] || '').toLowerCase();
+      return av < bv ? -sortDir : av > bv ? sortDir : 0;
+    });
+
+    document.getElementById('totalCount').textContent = rows.length;
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+
+    if (rows.length === 0) {
+      document.getElementById('emptyState').style.display = 'block';
+      document.getElementById('tableWrap').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('tableWrap').style.display = 'block';
+
+    rows.forEach(tag => {
+      const s  = typeStyle(tag.dataType);
+      const vc = valClass(tag);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="td-name">${esc(tag.name)}${newPaths.has(tag.path) ? ' <span class="new-badge">NEW</span>' : ''}</td>
+        <td><span class="type-pill" style="background:${s.bg};color:${s.color}">${esc(tag.dataType)}</span></td>
+        <td class="td-value ${vc}">${esc(tag.value)}</td>
+        <td class="td-value">${esc(tag.unit)}</td>
+        <td class="td-path" title="${esc(tag.path)}">${esc(tag.path)}
+          <button class="copy-btn" onclick="copyText('${esc(tag.path)}',this)">copy</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function valClass(tag) {
+    const v = tag.rawValue;
+    if (v === null || v === undefined) return 'v-null';
+    if (typeof v === 'boolean') return v ? 'v-bool-true' : 'v-bool-false';
+    if (tag.value === 'true')  return 'v-bool-true';
+    if (tag.value === 'false') return 'v-bool-false';
+    const dt = tag.dataType.toLowerCase();
+    if (dt.includes('int') || dt.includes('float') || dt.includes('double')) return 'v-num';
+    if (dt.includes('string')) return 'v-str';
+    return '';
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function setStatus(state, text) {
+    document.getElementById('statusDot').className = 'status-dot ' + state;
+    document.getElementById('statusText').textContent = text;
+  }
+
+  function toggleRaw() {
+    const pre  = document.getElementById('rawContent');
+    const icon = document.getElementById('rawToggleIcon');
+    icon.textContent = pre.classList.toggle('open') ? '▼ hide' : '▶ show';
+  }
+
+  function exportCSV() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const rows = allTags.filter(t =>
+      activeTypes.has(t.dataType) &&
+      (!q || t.name.toLowerCase().includes(q) || t.path.toLowerCase().includes(q))
+    );
+    const hdr = ['Name','Path','DataType','Value','Unit','Quality','Timestamp'];
+    const csv = [hdr, ...rows.map(t =>
+      [t.name, t.path, t.dataType, t.value, t.unit, t.quality, t.timestamp]
+    )].map(r => r.map(f => `"${String(f ?? '').replace(/"/g,'""')}"`).join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = `i3x-tags-${document.getElementById('elementId').value}.csv`;
+    a.click();
+  }
+
+  function esc(s) {
+    return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓';
+      setTimeout(() => btn.textContent = orig, 1200);
+    });
+  }
+</script>
+</body>
+</html>
