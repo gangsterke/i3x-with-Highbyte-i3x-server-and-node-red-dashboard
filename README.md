@@ -7,3 +7,7 @@ Flow
 Dashboard
 
 <img width="1481" height="567" alt="image" src="https://github.com/user-attachments/assets/6c0e011a-bb0b-4e74-b47a-2fa0c7c729e3" />
+
+HTTP tag browser (New tags are autom. added)
+
+<img width="1143" height="820" alt="image" src="https://github.com/user-attachments/assets/8158fdac-d298-44cf-94c3-31ed45f86ae9" />
